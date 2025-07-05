@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Premium Ad Reward System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src='//libtl.com/sdk.js' data-zone='9530647' data-sdk='show_9530647'></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { background: #181c23; color: #fff; font-family: Arial, sans-serif; }
+    .container { max-width: 350px; margin: 20px auto; background: #23272f; border-radius: 16px; padding: 20px; box-shadow: 0 0 10px #0004; }
+    .header { background: linear-gradient(90deg, #3fd37a, #ffb347); border-radius: 16px 16px 0 0; padding: 16px; text-align: center; }
+    .header h2 { margin: 0; font-size: 1.5em; }
+    .dev { font-size: 0.9em; color: #222; background: #b3ffb3; border-radius: 8px; padding: 2px 8px; display: inline-block; margin-top: 6px; }
+    .vip { background: #ffd700; color: #222; border-radius: 8px; padding: 2px 8px; font-weight: bold; margin-left: 8px; }
+    .stats, .actions, .withdraw, .visit { background: #23272f; border-radius: 12px; margin: 16px 0; padding: 12px; text-align: center; }
+    .btn { display: block; width: 100%; margin: 8px 0; padding: 12px; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; background: linear-gradient(90deg, #3fd37a, #ffb347); color: #222; transition: 0.2s; }
+    .btn:active { background: #3fd37a; }
+    .withdraw .btn, .visit .btn { background: #4a90e2; color: #fff; }
+    .footer { text-align: center; font-size: 0.9em; color: #aaa; margin-top: 16px; }
+    .firebase { background: #ff9800; color: #fff; border-radius: 6px; padding: 2px 8px; display: inline-block; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>Premium Ad Reward System</h2>
+      <div class="dev">Developed by <a href="https://t.me/aenzk" target="_blank">@aenzk</a></div>
+    </div>
+    <div class="stats">
+      <span class="vip">VIP USER</span>
+      <div id="user-info">Welcome, User<br>User ID: #USR-00000</div>
+      <div>Watched Ads: <span id="watched">0</span></div>
+      <div>Earned Points: <span id="points">0.00</span></div>
+      <div>Progress to Bonus: <span id="progress">0%</span></div>
+      <div style="background:#333;height:8px;border-radius:4px;margin:8px 0;">
+        <div id="progress-bar" style="background:#3fd37a;height:8px;width:0%;border-radius:4px;"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="watchAdBtn">Watch Ad (+0.25)</button>
+      <button class="btn" id="autoShowBtn">Auto Show Ads</button>
+      <button class="btn" id="stopAutoBtn">Stop Auto Ads</button>
+    </div>
+    <div class="withdraw">
+      <div style="font-weight:bold;color:#4a90e2;">Withdrawal System</div>
+      <div>Convert your points to real money</div>
+      <button class="btn" id="withdrawBtn">Withdraw Points</button>
+    </div>
+    <div class="visit">
+      <div style="font-weight:bold;">Visit Our Website</div>
+      <div>Check out our latest content and tools</div>
+      <button class="btn" onclick="window.open('https://monetag.com', '_blank')">Visit Website</button>
+    </div>
+    <div class="footer">
+      Secured by Firebase • All transactions are protected<br>
+      <span class="firebase">Firebase</span>
+    </div>
+  </div>
+  <script>
+    let watched = 0;
+    let points = 0.00;
+    let userId = null;
+    let username = null;
+    let autoInterval = null;
+
+    // Get Telegram user info
+    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
+      userId = Telegram.WebApp.initDataUnsafe.user?.id;
+      username = Telegram.WebApp.initDataUnsafe.user?.username;
+      document.getElementById('user-info').innerHTML = `Welcome, ${username || 'User'}<br>User ID: #USR-${userId || '00000'}`;
+    }
+
+    function updateStats() {
+      document.getElementById('watched').innerText = watched;
+      document.getElementById('points').innerText = points.toFixed(2);
+      let prog = Math.min(100, Math.floor((watched % 10) * 10));
+      document.getElementById('progress').innerText = prog + '%';
+      document.getElementById('progress-bar').style.width = prog + '%';
+    }
+
+    async function rewardUser() {
+      if (!userId) return;
+      await fetch('/api/reward', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, amount: 0.25 })
+      });
+    }
+
+    document.getElementById('watchAdBtn').onclick = function() {
+      show_9530647().then(() => {
+        watched++;
+        points += 0.25;
+        updateStats();
+        rewardUser();
+        alert('You have seen an ad!');
+      });
+    };
+
+    document.getElementById('autoShowBtn').onclick = function() {
+      if (autoInterval) return;
+      autoInterval = setInterval(() => {
+        show_9530647().then(() => {
+          watched++;
+          points += 0.25;
+          updateStats();
+          rewardUser();
+        });
+      }, 35000); // 35 seconds interval
+    };
+
+    document.getElementById('stopAutoBtn').onclick = function() {
+      clearInterval(autoInterval);
+      autoInterval = null;
+    };
+
+    document.getElementById('withdrawBtn').onclick = function() {
+      alert('Withdrawal request sent!');
+    };
+
+    updateStats();
+  </script>
+</body>
+</html>

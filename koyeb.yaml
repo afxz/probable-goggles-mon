@@ -1,0 +1,22 @@
+name: MonetagBotApp
+
+# Koyeb will use this Dockerfile to build and run your app
+build:
+  dockerfile: Dockerfile
+
+# Expose FastAPI on port 8000
+ports:
+  - internal: 8000
+    external: 8000
+    protocol: http
+
+# Set environment variables in Koyeb dashboard for security
+#   BOT_TOKEN, WEBAPP_URL, MONGO_URI, MONGO_DB
+
+# Healthcheck for FastAPI
+healthcheck:
+  path: /
+  interval: 30s
+  timeout: 5s
+  grace: 30s
+  method: GET
