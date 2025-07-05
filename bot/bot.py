@@ -25,7 +25,8 @@ async def send_welcome(message: types.Message):
     await message.answer(
         f"{START_MESSAGE}\n\n👤 <b>{full_name}</b>\n💰 <b>Points:</b> <code>{points:.2f}</code>\n{buy_code}\n\n{dev}",
         parse_mode="HTML",
-        disable_web_page_preview=True
+        disable_web_page_preview=True,
+        reply_markup=types.ReplyKeyboardRemove()
     )
 
 @dp.message(Command("help"))
