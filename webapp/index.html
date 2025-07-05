@@ -61,19 +61,21 @@
       transition: background 0.3s;
     }
     .vip {
+      position: absolute;
+      top: 12px;
+      right: 16px;
       background: #fbbf24;
       color: #23272f;
-      border-radius: 10px;
-      padding: 4px 14px;
-      font-weight: 900;
-      margin-left: 8px;
-      font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      letter-spacing: 0.04em;
-      box-shadow: 0 1px 8px #fbbf2444;
-      border: 2px solid #fbbf24;
-      font-size: 1.08em;
+      border-radius: 8px;
+      padding: 2px 10px;
+      font-weight: 700;
+      font-size: 0.92em;
+      border: 1.5px solid #fbbf24;
+      box-shadow: 0 1px 6px #fbbf2444;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 2px #fff6;
+      z-index: 2;
       animation: popIn 0.7s;
-      text-shadow: 0 1px 4px #fff6;
     }
     .stats, .actions, .withdraw, .visit {
       background: #23272f;
@@ -261,6 +263,8 @@
     let autoBtn = null;
     let autoNextTimeout = null;
     let autoNextDiv = document.getElementById('auto-next');
+    let lastBackendPoints = 0;
+    let autoAdRewardMisses = 0;
 
     // --- Auto-update check ---
     const APP_VERSION = '1.0.2'; // Increment this on every deploy
@@ -328,16 +332,16 @@
         const res = await fetch(`/api/user_points?telegram_id=${userId}`);
         const data = await res.json();
         if (typeof data.points === 'number') {
+          lastBackendPoints = points;
           points = data.points;
           updateStats();
+          return points;
         }
       } catch (e) {
         console.warn('Failed to fetch points from backend:', e);
       }
+      return null;
     }
-
-    // Call fetchPoints on load (after userId is set)
-    setTimeout(fetchPoints, 800);
 
     async function rewardUser() {
       if (!userId) return;
@@ -383,13 +387,24 @@
       try {
         await show_9530647();
         watched++;
-        points += 0.25;
+        // Always call rewardUser and check backend points after each ad
+        await rewardUser();
+        const backendPoints = await fetchPoints();
+        if (backendPoints !== null) {
+          if (backendPoints <= lastBackendPoints) {
+            autoAdRewardMisses++;
+            if (autoAdRewardMisses >= 3) {
+              showModal('⚠️ <b>Auto Ads may not be crediting points. Please try manual ads or contact support.</b>');
+              autoAdRewardMisses = 0;
+            }
+          } else {
+            autoAdRewardMisses = 0;
+          }
+        }
         updateStats();
-        rewardUser();
-        fetchPoints(); // sync points after reward
       } catch {}
       if (autoAdsActive) {
-        const delay = Math.floor(Math.random() * (14000 - 5000 + 1)) + 5000;
+        const delay = Math.floor(Math.random() * (7000 - 5000 + 1)) + 5000;
         let seconds = Math.floor(delay / 1000);
         autoNextDiv.innerHTML = `Next ad in <b>${seconds}</b> seconds...`;
         autoNextDiv.style.display = 'block';
@@ -406,6 +421,8 @@
         setTimeout(autoShowAds, delay);
       }
     }
+
+    // NOTE: Monetag SDK does not support auto-closing ads for anti-fraud reasons. User must close the ad manually.
 
     document.getElementById('autoAutoBtn').onclick = function() {
       autoBtn = document.getElementById('autoAutoBtn');

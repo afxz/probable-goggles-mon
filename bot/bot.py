@@ -21,9 +21,11 @@ async def send_welcome(message: types.Message):
     points = await get_points(user_id)
     dev = 'Developed by @aenzk\nhttps://t.me/aenzk'
     full_name = message.from_user.full_name if message.from_user and message.from_user.full_name else username
+    buy_code = '\n\n💡 <b>Want to buy this bot source code?</b>\n💸 Message the admin: <a href="https://t.me/aenzk">@aenzk</a>'
     await message.answer(
-        f"{START_MESSAGE}\n\n👤 <b>{full_name}</b>\n💰 <b>Points:</b> <code>{points:.2f}</code>\n\n{dev}",
-        parse_mode="HTML"
+        f"{START_MESSAGE}\n\n👤 <b>{full_name}</b>\n💰 <b>Points:</b> <code>{points:.2f}</code>\n{buy_code}\n\n{dev}",
+        parse_mode="HTML",
+        disable_web_page_preview=True
     )
 
 @dp.message(Command("help"))

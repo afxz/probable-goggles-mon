@@ -5,6 +5,7 @@ START_MESSAGE = (
     "• Watch ads to earn points.\n"
     "• Reach 100 points to withdraw.\n"
     "• Track your progress in the app.\n\n"
+    "💸 <b>Want to buy this bot source code?</b>\nMessage the admin: <a href='https://t.me/aenzk'>@aenzk</a>\n\n"
     "For support: @aenzk"
 )
 
