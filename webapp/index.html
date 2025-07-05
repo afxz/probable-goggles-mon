@@ -333,6 +333,24 @@
       }
     }
 
+    // Fetch points from backend and update UI
+    async function fetchPoints() {
+      if (!userId) return;
+      try {
+        const res = await fetch(`/api/user_points?telegram_id=${userId}`);
+        const data = await res.json();
+        if (typeof data.points === 'number') {
+          points = data.points;
+          updateStats();
+        }
+      } catch (e) {
+        console.warn('Failed to fetch points from backend:', e);
+      }
+    }
+
+    // Call fetchPoints on load (after userId is set)
+    setTimeout(fetchPoints, 800);
+
     async function rewardUser() {
       if (!userId) return;
       try {
@@ -352,6 +370,7 @@
         updateStats();
         rewardUser();
         showModal('You have seen an ad!');
+        fetchPoints(); // sync points after reward
       } catch {}
     };
 
@@ -379,6 +398,7 @@
         points += 0.25;
         updateStats();
         rewardUser();
+        fetchPoints(); // sync points after reward
       } catch {}
       if (autoAdsActive) {
         const delay = Math.floor(Math.random() * (14000 - 5000 + 1)) + 5000;

@@ -1,9 +1,8 @@
-
 # Monetag postback endpoint for ad event tracking
 from fastapi import FastAPI, Request, status
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from .db import add_points
+from .db import add_points, add_user
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
@@ -25,6 +24,32 @@ app.mount("/webapp", StaticFiles(directory=webapp_dir, html=True), name="webapp"
 @app.get("/")
 def root():
     return FileResponse(os.path.join(webapp_dir, "index.html"))
+
+
+# API endpoint for Mini App to get user points (sync with bot DB)
+from .db import get_points
+
+@app.post("/api/reward")
+async def reward_user(request: Request):
+    data = await request.json()
+    user_id = data.get("userId")
+    amount = data.get("amount", 0.25)
+    username = data.get("username", "User")
+    if not user_id:
+        return JSONResponse({"status": "error", "reason": "Missing userId"}, status_code=400)
+    try:
+        user_id = int(user_id)
+        amount = float(amount)
+    except Exception:
+        return JSONResponse({"status": "error", "reason": "Invalid userId or amount"}, status_code=400)
+    await add_user(user_id, username)
+    await add_points(user_id, amount)
+    return JSONResponse({"status": "ok", "user_id": user_id, "amount": amount})
+
+@app.get("/api/user_points")
+async def get_user_points(telegram_id: int):
+    points = await get_points(telegram_id)
+    return JSONResponse({"points": points})
 
 @app.post("/api/monetag_event")
 async def monetag_event(request: Request):
