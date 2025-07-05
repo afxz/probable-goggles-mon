@@ -24,7 +24,7 @@ async def send_welcome(message: types.Message):
     user_id = message.from_user.id if message.from_user else 0
     username = message.from_user.username if message.from_user and message.from_user.username else "User"
     await add_user(user_id, username)
-    points = await get_points(user_id)
+    points = await get_points(user_id) if callable(getattr(get_points, "__await__", None)) else get_points(user_id)
     kb = ReplyKeyboardBuilder()
     webapp_url = WEBAPP_URL or "https://t.me/monetag_earning_pro_bot/earn"
     kb.add(KeyboardButton(text='Open Earning App', web_app=WebAppInfo(url=webapp_url)))
@@ -42,7 +42,7 @@ async def help_message(message: types.Message):
 @dp.message(Command("points"))
 async def show_points(message: types.Message):
     user_id = message.from_user.id if message.from_user else 0
-    points = await get_points(user_id)
+    points = await get_points(user_id) if callable(getattr(get_points, "__await__", None)) else get_points(user_id)
     await message.reply(f"You have {points:.2f} points.")
 
 

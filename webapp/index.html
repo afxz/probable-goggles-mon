@@ -18,7 +18,25 @@
     .withdraw .btn, .visit .btn { background: #4a90e2; color: #fff; }
     .footer { text-align: center; font-size: 0.9em; color: #aaa; margin-top: 16px; }
     .firebase { background: #ff9800; color: #fff; border-radius: 6px; padding: 2px 8px; display: inline-block; margin-top: 6px; }
+    .modal {
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: #23272f; color: #fff; padding: 24px 32px; border-radius: 16px; box-shadow: 0 2px 24px #0008;
+      text-align: center; font-size: 1.1em; min-width: 220px; max-width: 80vw;
+    }
+    .modal-content button { margin-top: 18px; background: #3fd37a; color: #222; border: none; border-radius: 8px; padding: 10px 24px; font-weight: bold; cursor: pointer; }
   </style>
+
+  <!-- Modal HTML moved outside of <style> -->
+  <div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" id="modal-content">
+      <span id="modal-message"></span><br>
+      <button onclick="closeModal(event)">OK</button>
+    </div>
+  </div>
 </head>
 <body>
   <div class="container">
@@ -78,6 +96,17 @@
       document.getElementById('progress-bar').style.width = prog + '%';
     }
 
+    function showModal(message) {
+      document.getElementById('modal-message').innerText = message;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal(e) {
+      if (!e || e.target === document.getElementById('modal') || e.target.tagName === 'BUTTON') {
+        document.getElementById('modal').classList.remove('active');
+      }
+    }
+
     async function rewardUser() {
       if (!userId) return;
       await fetch('/api/reward', {
@@ -93,20 +122,35 @@
         points += 0.25;
         updateStats();
         rewardUser();
-        alert('You have seen an ad!');
+        showModal('You have seen an ad!');
       });
     };
 
+    let autoAdsActive = false;
+    async function autoShowAds() {
+      if (!autoAdsActive) return;
+      try {
+        await show_9530647();
+        watched++;
+        points += 0.25;
+        updateStats();
+        rewardUser();
+      } catch (e) {
+        // Optionally show error modal
+      }
+      if (autoAdsActive) {
+        setTimeout(autoShowAds, 35000); // Wait 35s before next ad
+      }
+    }
+
     document.getElementById('autoShowBtn').onclick = function() {
-      if (autoInterval) return;
-      autoInterval = setInterval(() => {
-        show_9530647().then(() => {
-          watched++;
-          points += 0.25;
-          updateStats();
-          rewardUser();
-        });
-      }, 35000); // 35 seconds interval
+      if (autoAdsActive) return;
+      autoAdsActive = true;
+      autoShowAds();
+    };
+
+    document.getElementById('stopAutoBtn').onclick = function() {
+      autoAdsActive = false;
     };
 
     document.getElementById('stopAutoBtn').onclick = function() {
@@ -115,7 +159,11 @@
     };
 
     document.getElementById('withdrawBtn').onclick = function() {
-      alert('Withdrawal request sent!');
+      if (points < 100) {
+        showModal('You need at least 100 points to withdraw.');
+      } else {
+        showModal('Withdrawal request sent! Please DM the admin with your User ID and payment details.');
+      }
     };
 
     updateStats();
