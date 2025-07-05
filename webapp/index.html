@@ -9,8 +9,8 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #23272f 0%, #1e2530 100%);
-      color: #fff;
+      background: linear-gradient(135deg, #181c22 0%, #23272f 100%);
+      color: #f7f7fa;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
       font-size: 16px;
       letter-spacing: 0.01em;
@@ -21,161 +21,162 @@
       transition: background 0.5s;
     }
     .container {
-      max-width: 390px;
+      max-width: 400px;
       margin: 36px auto 24px auto;
-      background: rgba(35,39,47,0.98);
-      border-radius: 24px;
-      padding: 32px 24px 20px 24px;
-      box-shadow: 0 8px 40px #0008;
+      background: rgba(28,32,40,0.98);
+      border-radius: 28px;
+      padding: 36px 26px 22px 26px;
+      box-shadow: 0 8px 40px #000a;
       animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) 0s 1;
     }
     .header {
-      background: linear-gradient(90deg, #3fd37a 0%, #4a90e2 100%);
-      border-radius: 24px 24px 0 0;
-      padding: 24px 10px 14px 10px;
+      background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+      border-radius: 28px 28px 0 0;
+      padding: 28px 10px 16px 10px;
       text-align: center;
-      box-shadow: 0 2px 12px #0002;
+      box-shadow: 0 2px 16px #0002;
       animation: fadeInDown 0.7s cubic-bezier(.23,1.01,.32,1) 0s 1;
     }
     .header h2 {
       margin: 0;
-      font-size: 2.1em;
+      font-size: 2.2em;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      color: #23272f;
-      text-shadow: 0 2px 8px #fff3;
-      letter-spacing: 0.04em;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      color: #181c22;
+      text-shadow: 0 2px 8px #fff2;
       animation: fadeIn 1.2s;
     }
     .dev {
       font-size: 1em;
-      color: #222;
-      background: #b3ffb3;
+      color: #fff;
+      background: linear-gradient(90deg, #23272f 60%, #3b82f6 100%);
       border-radius: 8px;
       padding: 3px 12px;
       display: inline-block;
       margin-top: 10px;
       font-family: 'Roboto', Arial, sans-serif;
       font-weight: 600;
-      box-shadow: 0 1px 6px #3fd37a44;
+      box-shadow: 0 1px 6px #3b82f644;
       transition: background 0.3s;
     }
     .vip {
-      background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
-      color: #222;
-      border-radius: 8px;
-      padding: 3px 12px;
-      font-weight: 800;
+      background: linear-gradient(90deg, #fbbf24 60%, #fef9c3 100%);
+      color: #23272f;
+      border-radius: 10px;
+      padding: 4px 14px;
+      font-weight: 900;
       margin-left: 8px;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      letter-spacing: 0.03em;
-      box-shadow: 0 1px 6px #ffd70044;
-      border: 1.5px solid #fffbe6;
+      letter-spacing: 0.04em;
+      box-shadow: 0 1px 8px #fbbf2444;
+      border: 2px solid #fef9c3;
+      font-size: 1.08em;
       animation: popIn 0.7s;
+      text-shadow: 0 1px 4px #fff6;
     }
     .stats, .actions, .withdraw, .visit {
-      background: rgba(35,39,47,0.98);
-      border-radius: 16px;
-      margin: 20px 0;
-      padding: 18px 12px;
+      background: rgba(28,32,40,0.98);
+      border-radius: 18px;
+      margin: 22px 0;
+      padding: 20px 14px;
       text-align: center;
-      box-shadow: 0 2px 10px #0002;
+      box-shadow: 0 2px 12px #0003;
       animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) 0s 1;
     }
     .btn {
       display: block;
       width: 100%;
-      margin: 12px 0;
-      padding: 16px;
+      margin: 14px 0;
+      padding: 18px;
       border: none;
-      border-radius: 12px;
-      font-size: 1.15em;
-      font-weight: 700;
+      border-radius: 14px;
+      font-size: 1.18em;
+      font-weight: 800;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
       cursor: pointer;
-      background: linear-gradient(90deg, #3fd37a 0%, #4a90e2 100%);
-      color: #222;
+      background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+      color: #181c22;
       transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-      box-shadow: 0 2px 8px #0002;
+      box-shadow: 0 2px 10px #0002;
       letter-spacing: 0.01em;
       outline: none;
       animation: fadeIn 1.1s;
     }
     .btn:active {
-      background: #3fd37a;
+      background: #6ee7b7;
       color: #fff;
-      box-shadow: 0 1px 4px #3fd37a44;
+      box-shadow: 0 1px 4px #6ee7b744;
     }
     .btn:hover {
-      background: linear-gradient(90deg, #4a90e2 0%, #3fd37a 100%);
+      background: linear-gradient(90deg, #3b82f6 0%, #6ee7b7 100%);
       color: #fff;
-      box-shadow: 0 2px 12px #4a90e244;
+      box-shadow: 0 2px 14px #3b82f644;
     }
     .withdraw .btn, .visit .btn {
-      background: linear-gradient(90deg, #4a90e2 0%, #3fd37a 100%);
+      background: linear-gradient(90deg, #3b82f6 0%, #6ee7b7 100%);
       color: #fff;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      box-shadow: 0 2px 10px #4a90e244;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      box-shadow: 0 2px 12px #3b82f644;
     }
     .footer {
       text-align: center;
       font-size: 1em;
-      color: #aaa;
-      margin-top: 24px;
+      color: #bfc9d1;
+      margin-top: 28px;
       font-family: 'Roboto', Arial, sans-serif;
       letter-spacing: 0.01em;
-      opacity: 0.85;
+      opacity: 0.92;
       animation: fadeIn 1.2s;
     }
     .firebase {
-      background: linear-gradient(90deg, #ff9800 60%, #ffd700 100%);
-      color: #222;
+      background: linear-gradient(90deg, #f59e42 60%, #fbbf24 100%);
+      color: #23272f;
       border-radius: 8px;
       padding: 4px 12px;
       display: inline-block;
       margin-top: 10px;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      font-weight: 700;
-      box-shadow: 0 1px 6px #ffd70044;
+      font-weight: 800;
+      box-shadow: 0 1px 8px #fbbf2444;
     }
     .modal {
       display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
     }
     .modal.active { display: flex; }
     .modal-content {
       background: #23272f;
-      color: #fff;
-      padding: 32px 40px;
-      border-radius: 20px;
-      box-shadow: 0 2px 24px #0008;
+      color: #f7f7fa;
+      padding: 36px 44px;
+      border-radius: 22px;
+      box-shadow: 0 2px 28px #000a;
       text-align: center;
-      font-size: 1.15em;
+      font-size: 1.18em;
       min-width: 220px;
       max-width: 80vw;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      font-weight: 700;
+      font-weight: 800;
       animation: fadeIn 0.7s;
     }
     .modal-content button {
-      margin-top: 22px;
-      background: linear-gradient(90deg, #3fd37a 0%, #4a90e2 100%);
-      color: #222;
+      margin-top: 24px;
+      background: linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%);
+      color: #181c22;
       border: none;
-      border-radius: 10px;
-      padding: 13px 32px;
-      font-weight: 700;
+      border-radius: 12px;
+      padding: 14px 36px;
+      font-weight: 800;
       font-family: 'Inter', 'Roboto', Arial, sans-serif;
       font-size: 1em;
       cursor: pointer;
-      box-shadow: 0 1px 6px #3fd37a44;
+      box-shadow: 0 1px 8px #6ee7b744;
       letter-spacing: 0.01em;
       transition: background 0.18s, color 0.18s;
     }
     .modal-content button:hover {
-      background: linear-gradient(90deg, #4a90e2 0%, #3fd37a 100%);
+      background: linear-gradient(90deg, #3b82f6 0%, #6ee7b7 100%);
       color: #fff;
     }
 
@@ -200,6 +201,9 @@
   </style>
 
   <!-- Modal HTML moved outside of <style> -->
+  <div id="update-banner" style="display:none;position:fixed;top:0;left:0;width:100vw;z-index:2000;background:linear-gradient(90deg,#fbbf24,#3b82f6);color:#23272f;font-weight:800;text-align:center;padding:14px 0;font-size:1.08em;box-shadow:0 2px 12px #0005;cursor:pointer;letter-spacing:0.03em;">
+    New update available! Tap to refresh
+  </div>
   <div id="modal" class="modal" onclick="closeModal(event)">
     <div class="modal-content" id="modal-content">
       <span id="modal-message"></span><br>
@@ -231,8 +235,7 @@
     </div>
     <div class="actions">
       <button class="btn" id="watchAdBtn">🎬 Watch Ad <span style="font-size:0.9em;">(+0.25)</span></button>
-      <button class="btn" id="autoShowBtn">▶️ Auto Show Ads</button>
-      <button class="btn" id="stopAutoBtn">⏹️ Stop Auto Ads</button>
+      <button class="btn" id="autoAutoBtn">▶️ Auto Ads</button>
     </div>
     <div class="withdraw">
       <div style="font-weight:bold;color:#4a90e2;font-size:1.1em;">💸 Withdrawal System</div>
@@ -253,14 +256,35 @@
     // --- Efficient State & Event Handling ---
     let watched = 0, points = 0.00, userId = null, username = null;
     let autoAdsActive = false;
+    let autoBtn = null;
 
-    // Telegram user info
+    // --- Auto-update check ---
+    const APP_VERSION = '1.0.2'; // Increment this on every deploy
+    function checkForUpdate() {
+      fetch(window.location.pathname + '?v=' + Math.random(), {cache:'no-store'})
+        .then(r => r.text())
+        .then(html => {
+          const match = html.match(/APP_VERSION = '([\d.]+)'/);
+          if (match && match[1] && match[1] !== APP_VERSION) {
+            const banner = document.getElementById('update-banner');
+            banner.style.display = 'block';
+            banner.onclick = () => window.location.reload();
+          }
+        });
+    }
+    setInterval(checkForUpdate, 10000); // Check every 10s
+
+    // Telegram user info (show first_name if available, else username, else 'User')
     (() => {
       const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe;
       if (tg) {
         userId = Telegram.WebApp.initDataUnsafe.user?.id;
+        const firstName = Telegram.WebApp.initDataUnsafe.user?.first_name;
+        const lastName = Telegram.WebApp.initDataUnsafe.user?.last_name;
         username = Telegram.WebApp.initDataUnsafe.user?.username;
-        document.getElementById('user-info').innerHTML = `Welcome, ${username || 'User'}<br>User ID: #USR-${userId || '00000'}`;
+        let displayName = firstName || username || 'User';
+        if (firstName && lastName) displayName = `${firstName} ${lastName}`;
+        document.getElementById('user-info').innerHTML = `Welcome, <b>${displayName}</b><br>User ID: #USR-${userId || '00000'}`;
       }
     })();
 
@@ -304,6 +328,17 @@
       } catch {}
     };
 
+    function setAutoBtn(running) {
+      autoBtn = document.getElementById('autoAutoBtn');
+      if (running) {
+        autoBtn.innerHTML = '⏹️ Stop Auto Ads';
+        autoBtn.style.background = 'linear-gradient(90deg, #ef4444 0%, #fbbf24 100%)';
+      } else {
+        autoBtn.innerHTML = '▶️ Auto Ads';
+        autoBtn.style.background = '';
+      }
+    }
+
     async function autoShowAds() {
       if (!autoAdsActive) return;
       try {
@@ -313,16 +348,24 @@
         updateStats();
         rewardUser();
       } catch {}
-      if (autoAdsActive) setTimeout(autoShowAds, 35000);
+      if (autoAdsActive) {
+        const delay = Math.floor(Math.random() * (14000 - 5000 + 1)) + 5000;
+        setTimeout(autoShowAds, delay);
+      }
     }
-    document.getElementById('autoShowBtn').onclick = function() {
-      if (autoAdsActive) return;
-      autoAdsActive = true;
-      autoShowAds();
+
+    document.getElementById('autoAutoBtn').onclick = function() {
+      autoBtn = document.getElementById('autoAutoBtn');
+      if (!autoAdsActive) {
+        autoAdsActive = true;
+        setAutoBtn(true);
+        autoShowAds();
+      } else {
+        autoAdsActive = false;
+        setAutoBtn(false);
+      }
     };
-    document.getElementById('stopAutoBtn').onclick = function() {
-      autoAdsActive = false;
-    };
+    setAutoBtn(false);
     document.getElementById('withdrawBtn').onclick = function() {
       showModal(points < 100 ? 'You need at least 100 points to withdraw.' : 'Withdrawal request sent! Please DM the admin with your User ID and payment details.');
     };

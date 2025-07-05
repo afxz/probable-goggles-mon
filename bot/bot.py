@@ -37,6 +37,13 @@ async def send_welcome(message: types.Message):
         parse_mode="HTML"
     )
 
+@dp.message(Command("points"))
+async def show_points(message: types.Message):
+    user_id = message.from_user.id if message.from_user else 0
+    points = await get_points(user_id) if callable(getattr(get_points, "__await__", None)) else get_points(user_id)
+    full_name = message.from_user.full_name if message.from_user and message.from_user.full_name else (message.from_user.username if message.from_user and message.from_user.username else "User")
+    await message.answer(f"👤 <b>{full_name}</b>\n💰 <b>Points:</b> <code>{points:.2f}</code>", parse_mode="HTML")
+
 @dp.message(Command("help"))
 async def help_message(message: types.Message):
     await message.answer(HELP_MESSAGE, parse_mode="Markdown")
@@ -50,11 +57,8 @@ async def nav_buttons(message: types.Message):
     if text in ["help", "❓ help"]:
         await message.answer(HELP_MESSAGE, parse_mode="Markdown")
 
-@dp.message(Command("points"))
-async def show_points(message: types.Message):
-    user_id = message.from_user.id if message.from_user else 0
-    points = await get_points(user_id) if callable(getattr(get_points, "__await__", None)) else get_points(user_id)
-    await message.reply(f"You have {points:.2f} points.")
+
+# Remove duplicate show_points handler (now merged with start message)
 
 
 # Admin commands
