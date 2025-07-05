@@ -46,7 +46,7 @@ async def show_points(message: types.Message):
 
 @dp.message(Command("help"))
 async def help_message(message: types.Message):
-    await message.answer(HELP_MESSAGE, parse_mode="Markdown")
+    await message.answer(HELP_MESSAGE, parse_mode="HTML")
 
 # Navigation: handle custom keyboard buttons
 @dp.message()
@@ -55,7 +55,7 @@ async def nav_buttons(message: types.Message):
         return
     text = message.text.strip().lower()
     if text in ["help", "❓ help"]:
-        await message.answer(HELP_MESSAGE, parse_mode="Markdown")
+        await message.answer(HELP_MESSAGE, parse_mode="HTML")
 
 
 # Remove duplicate show_points handler (now merged with start message)
@@ -68,18 +68,28 @@ ADMIN_IDS = [int(i) for i in os.getenv("ADMIN_IDS", "7068007001").split(",") if 
 async def bot_stats(message: types.Message):
     if message.from_user and message.from_user.id in ADMIN_IDS:
         user_count = await get_user_count()
-        await message.reply(f"Bot Stats:\nTotal Users: {user_count}\nAdmin: @aenzk (7068007001)")
+        admin_username = message.from_user.username or "-"
+        admin_id = message.from_user.id
+        await message.reply(f"<b>Bot Stats</b>\n👤 <b>Admin:</b> @{admin_username} (<code>{admin_id}</code>)\n👥 <b>Total Users:</b> <code>{user_count}</code>", parse_mode="HTML")
     else:
         await message.reply("You are not authorized to use this command.")
 
 @dp.message(Command("userstats"))
 async def user_stats(message: types.Message):
     if message.from_user and message.from_user.id in ADMIN_IDS:
-        text = "User Stats:\n"
+        text = "<b>User Stats</b>\n"
         cursor = await get_all_users()
+        user_lines = []
         async for user in cursor:
-            text += f"ID: {user['user_id']} | Username: {user.get('username', '-')}, Points: {user.get('points', 0.0)}\n"
-        await message.reply(text or "No users found.")
+            user_id = user.get('user_id', '-')
+            username = user.get('username', '-')
+            points = user.get('points', 0.0)
+            user_lines.append(f"<b>ID:</b> <code>{user_id}</code> | <b>Username:</b> @{username} | <b>Points:</b> <code>{points:.2f}</code>")
+        if user_lines:
+            text += "\n".join(user_lines)
+        else:
+            text += "No users found."
+        await message.reply(text, parse_mode="HTML")
     else:
         await message.reply("You are not authorized to use this command.")
 

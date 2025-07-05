@@ -279,41 +279,27 @@
     setInterval(checkForUpdate, 10000); // Check every 10s
 
     // Telegram user info (show first_name if available, else username, else 'User')
-    (() => {
-      const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe;
-      // Debug: show Telegram initDataUnsafe
-      if (tg) {
-        console.log('Telegram.WebApp.initDataUnsafe:', Telegram.WebApp.initDataUnsafe);
-        if (Telegram.WebApp.initDataUnsafe.user) {
-          console.log('User object:', Telegram.WebApp.initDataUnsafe.user);
-          // Patch: If user object is present but id is 0 or missing, force reload (Telegram bug workaround)
-          if (!Telegram.WebApp.initDataUnsafe.user.id || Telegram.WebApp.initDataUnsafe.user.id === 0) {
-            setTimeout(() => {
-              window.location.reload();
-            }, 500);
-            return;
-          }
-        } else {
-          console.warn('No user object in initDataUnsafe! Forcing reload...');
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
-          return;
-        }
-        userId = Telegram.WebApp.initDataUnsafe.user?.id;
-        const firstName = Telegram.WebApp.initDataUnsafe.user?.first_name;
-        const lastName = Telegram.WebApp.initDataUnsafe.user?.last_name;
-        username = Telegram.WebApp.initDataUnsafe.user?.username;
-        let displayName = firstName || username || 'User';
-        if (firstName && lastName) displayName = `${firstName} ${lastName}`;
-        document.getElementById('user-info').innerHTML = `Welcome, <b>${displayName}</b><br>User ID: #USR-${userId || '00000'}`;
-      } else {
-        console.log('Telegram Mini App user object not found. Forcing reload...');
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.Telegram && Telegram.WebApp && typeof Telegram.WebApp.ready === 'function') {
+        Telegram.WebApp.ready();
       }
-    })();
+      setTimeout(() => {
+        const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe;
+        if (tg && Telegram.WebApp.initDataUnsafe.user && Telegram.WebApp.initDataUnsafe.user.id && Telegram.WebApp.initDataUnsafe.user.id !== 0) {
+          userId = Telegram.WebApp.initDataUnsafe.user.id;
+          const firstName = Telegram.WebApp.initDataUnsafe.user.first_name;
+          const lastName = Telegram.WebApp.initDataUnsafe.user.last_name;
+          username = Telegram.WebApp.initDataUnsafe.user.username;
+          let displayName = firstName || username || 'User';
+          if (firstName && lastName) displayName = `${firstName} ${lastName}`;
+          document.getElementById('user-info').innerHTML = `Welcome, <b>${displayName}</b><br>User ID: #USR-${userId}`;
+        } else {
+          console.warn('Telegram Mini App user object not found or invalid:', tg);
+          showModal('❌ <b>User info not detected!</b><br><br>Please make sure you are opening this app from inside Telegram.\nIf you are, try closing and reopening the Mini App.');
+          document.getElementById('user-info').innerHTML = '<span style="color:#ff5252;font-weight:700;">User info not detected.</span>';
+        }
+      }, 300);
+    });
 
     function updateStats() {
       document.getElementById('watched').innerText = watched;
