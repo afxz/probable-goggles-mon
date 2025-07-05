@@ -21,6 +21,11 @@ app.add_middleware(
 webapp_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../webapp'))
 app.mount("/webapp", StaticFiles(directory=webapp_dir, html=True), name="webapp")
 
+# Serve index.html at root
+@app.get("/")
+def root():
+    return FileResponse(os.path.join(webapp_dir, "index.html"))
+
 @app.post("/api/monetag_event")
 async def monetag_event(request: Request):
     data = await request.json()
@@ -37,7 +42,10 @@ async def monetag_event(request: Request):
 
     # Only reward if event is paid and telegram_id is present
     if telegram_id and reward_event_type == "yes":
-        # You can use estimated_price as the reward amount, or a fixed value
+        try:
+            telegram_id = int(telegram_id)
+        except Exception:
+            return JSONResponse({"status": "error", "reason": "Invalid telegram_id"}, status_code=400)
         reward_amount = float(estimated_price) if estimated_price else 0.25
         await add_points(telegram_id, reward_amount)
         return JSONResponse({
