@@ -29,6 +29,6 @@ async def reward(request: Request):
     user_id = data.get('userId')
     amount = data.get('amount', 0.25)
     if user_id:
-        add_points(user_id, amount)
+        await add_points(user_id, amount)
         return {"status": "ok", "rewarded": amount}
     return {"status": "error", "msg": "No userId"}

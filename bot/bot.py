@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 API_TOKEN = os.getenv('BOT_TOKEN')
-WEBAPP_URL = os.getenv('WEBAPP_URL', 'https://t.me/monetag_earning_pro_bot/earn')
+WEBAPP_URL = os.getenv('WEBAPP_URL')
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN or "")
@@ -26,7 +26,8 @@ async def send_welcome(message: types.Message):
     await add_user(user_id, username)
     points = await get_points(user_id)
     kb = ReplyKeyboardBuilder()
-    kb.add(KeyboardButton(text='Open Earning App', web_app=WebAppInfo(url=WEBAPP_URL)))
+    webapp_url = WEBAPP_URL or "https://t.me/monetag_earning_pro_bot/earn"
+    kb.add(KeyboardButton(text='Open Earning App', web_app=WebAppInfo(url=webapp_url)))
     dev = 'Developed by @aenzk\nhttps://t.me/aenzk'
     full_name = message.from_user.full_name if message.from_user and message.from_user.full_name else username
     await message.answer(
