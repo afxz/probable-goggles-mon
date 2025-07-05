@@ -27,17 +27,33 @@ async def send_welcome(message: types.Message):
     points = await get_points(user_id) if callable(getattr(get_points, "__await__", None)) else get_points(user_id)
     kb = ReplyKeyboardBuilder()
     webapp_url = WEBAPP_URL or "https://t.me/monetag_earning_pro_bot/earn"
-    kb.add(KeyboardButton(text='Open Earning App', web_app=WebAppInfo(url=webapp_url)))
+    kb.add(KeyboardButton(text='🏆 Open Earning App', web_app=WebAppInfo(url=webapp_url)))
+    kb.add(KeyboardButton(text='💰 My Points'))
+    kb.add(KeyboardButton(text='❓ Help'))
     dev = 'Developed by @aenzk\nhttps://t.me/aenzk'
     full_name = message.from_user.full_name if message.from_user and message.from_user.full_name else username
     await message.answer(
-        f"{START_MESSAGE}\n\n� {full_name}\n💰 Points: {points:.2f}\n\n{dev}",
-        reply_markup=kb.as_markup(resize_keyboard=True)
+        f"{START_MESSAGE}\n\n👤 <b>{full_name}</b>\n💰 <b>Points:</b> <code>{points:.2f}</code>\n\n{dev}",
+        reply_markup=kb.as_markup(resize_keyboard=True),
+        parse_mode="HTML"
     )
 
 @dp.message(Command("help"))
 async def help_message(message: types.Message):
     await message.answer(HELP_MESSAGE, parse_mode="Markdown")
+
+# Navigation: handle custom keyboard buttons
+@dp.message()
+async def nav_buttons(message: types.Message):
+    if not message.text:
+        return
+    text = message.text.strip().lower()
+    if text in ["my points", "💰 my points"]:
+        user_id = message.from_user.id if message.from_user else 0
+        points = await get_points(user_id) if callable(getattr(get_points, "__await__", None)) else get_points(user_id)
+        await message.reply(f"You have <b>{points:.2f}</b> points.", parse_mode="HTML")
+    elif text in ["help", "❓ help"]:
+        await message.answer(HELP_MESSAGE, parse_mode="Markdown")
 
 @dp.message(Command("points"))
 async def show_points(message: types.Message):
